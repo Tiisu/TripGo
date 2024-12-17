@@ -14,7 +14,8 @@ const About = () => {
       <section
         className="about-header text-center py-16 bg-cover bg-center relative"
         style={{
-          backgroundImage: "url(./src/assets/contact.jpg)",
+          backgroundImage:
+            "url(https://img.freepik.com/free-photo/travel-concept-with-landmarks_23-2149153256.jpg?t=st=1734459512~exp=1734463112~hmac=956199774261d513cea7b1861f7343dcc4bcdc9298fbcf1c82e3028ab2da7f18&w=1800)",
         }}
       >
         {/* Dimmed Background Overlay */}
