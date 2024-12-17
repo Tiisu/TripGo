@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AppContext } from "../context/AppContext";
 
 const Booking = () => {
+  const { user } = useContext(AppContext);
   const location = useLocation();
   const navigate = useNavigate();
   const tour = location.state?.tour;
@@ -48,7 +50,7 @@ const Booking = () => {
           },
           body: JSON.stringify({
             ...formData,
-            tourId: tour.id, // Use tour.id instead of tour._id
+            tourId: tour.id,
             tourTitle: tour.title,
             totalPrice,
           }),
@@ -71,11 +73,11 @@ const Booking = () => {
   };
 
   useEffect(() => {
-    console.log("Tour object:", tour); // Added console.log statement
     setTotalPrice(price * parseInt(formData.travelers, 10));
-  }, [formData.travelers, price, tour]); // Added tour to dependencies
+  }, [formData.travelers, price, tour]);
 
-  return (
+  // The following render is only triggered if a user is logged in
+  return user ? (
     <div className="max-w-4xl mx-auto p-6 bg-white/20 rounded-lg bg-inherit shadow-lg">
       <h2 className="text-3xl font-bold mb-6">Book Your Tour: {title}</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -147,6 +149,8 @@ const Booking = () => {
         </button>
       </form>
     </div>
+  ) : (
+    <div className="text-center mt-20">Please log in to make a booking.</div>
   );
 };
 
