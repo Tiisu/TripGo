@@ -8,7 +8,7 @@ const Tour = () => {
       {/* Container for the background image and heading */}
       <div
         className="relative bg-cover bg-center bg-no-repeat h-64 sm:h-80 lg:h-96 mb-20"
-        style={{ backgroundImage: "url('./src/assets/tour.jpg')" }} // Set your image path here
+        style={{ backgroundImage: "url('/tour.jpg')" }} // Set your image path here
       >
         {/* Dimmer Overlay */}
         <div className="absolute inset-0 bg-black opacity-40"></div>{" "}

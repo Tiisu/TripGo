@@ -3,7 +3,7 @@ import instagram_icon from "./instagram_icon.svg";
 import twitter_icon from "./twitter_icon.svg";
 import earth from "./earth.png";
 import headerimg from "./headerimg.png";
-import tour from "./tour.jpg";
+
 import { Compass, MapPin, UsersRound } from "lucide-react";
 import user from "./profile_icon.png";
 
@@ -14,7 +14,6 @@ export const assets = {
   earth,
   headerimg,
   user,
-  tour,
 };
 
 export const stepsData = [
