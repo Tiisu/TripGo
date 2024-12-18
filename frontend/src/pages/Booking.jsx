@@ -9,8 +9,8 @@ const Booking = () => {
   const navigate = useNavigate();
   const tour = location.state?.tour;
 
-  if (!tour) {
-    return <div>No tour selected. Please go back.</div>;
+  if (!tour || !user) {
+    return navigate("/login");
   }
 
   const { title, price } = tour;

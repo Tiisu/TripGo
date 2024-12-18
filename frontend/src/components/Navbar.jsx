@@ -22,13 +22,20 @@ const Navbar = () => {
         />
       </Link>
 
+      {/* Flex container for small screens */}
       <div className="flex items-center gap-4 sm:hidden">
         {user && (
-          <img
-            src={assets.user}
-            alt="profileimg"
-            className="w-10 drop-shadow"
-          />
+          <div className="relative group">
+            <img
+              src={assets.user}
+              alt="profileimg"
+              className="w-10 drop-shadow"
+            />
+            {/* Tooltip with the user's name on hover */}
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-12 p-2 bg-black text-white rounded opacity-0 group-hover:opacity-100 transition-opacity">
+              Hi,{user.name}
+            </div>
+          </div>
         )}
 
         {/* Hamburger icon for mobile */}
@@ -74,25 +81,16 @@ const Navbar = () => {
               Tours
             </Link>
           </li>
-
-          {user && (
-            <li>
-              <Link
-                to="/user-booking"
-                className={`hover:text-blue-500 ${
-                  location.pathname === "/user-booking"
-                    ? "text-blue-500 font-bold"
-                    : ""
-                }`}
-              >
-                Booking
-              </Link>
-            </li>
-          )}
         </ul>
         {user ? (
           <div className="flex items-center gap-4">
-            <img src={assets.user} alt="" width={40} />
+            <div className="relative group">
+              <img src={assets.user} alt="profile" width={40} />
+              {/* Tooltip for user name */}
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-12 p-2 bg-black text-white rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                Hi,{user.name}
+              </div>
+            </div>
             <button
               onClick={logout}
               className="px-4 py-2 bg-gradient-to-b from-sky-500 to-blue-500 text-white rounded hover:from-sky-800 hover:to-blue-700 "
@@ -153,19 +151,6 @@ const Navbar = () => {
 
             {user ? (
               <>
-                <li>
-                  <Link
-                    to="/user-booking"
-                    onClick={() => setMenuOpen(false)}
-                    className={`hover:text-blue-500 ${
-                      location.pathname === "/user-booking"
-                        ? "text-blue-500 font-bold"
-                        : ""
-                    }`}
-                  >
-                    Bookings
-                  </Link>
-                </li>
                 <li>
                   <button
                     onClick={() => {

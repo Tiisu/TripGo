@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Calendar, DollarSign, MapPin, Users, Star } from "lucide-react";
 import tourData from "../assets/data/tour.js";
+import { AppContext } from "../context/AppContext";
 
 const TourDetails = () => {
+  const { user } = useContext(AppContext);
   const navigate = useNavigate();
   const { id } = useParams();
   const tour = tourData.find((tour) => tour.id === id);
@@ -128,7 +130,13 @@ const TourDetails = () => {
         <div className="text-center mt-12">
           <button
             onClick={() => {
-              navigate(`/booking`, { state: { tour } });
+              if (!user) {
+                // If user is not logged in, navigate to the login page
+                navigate("/login");
+              } else {
+                // If user is logged in, navigate to the booking page
+                navigate(`/booking`, { state: { tour } });
+              }
             }}
             className="bg-gradient-to-b from-sky-500 to-blue-500 hover:from-sky-800 hover:to-blue-700 px-6 py-3 text-white text-lg font-semibold rounded-full transition duration-300"
           >

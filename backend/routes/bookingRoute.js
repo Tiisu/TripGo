@@ -6,7 +6,6 @@ import {
 
 const bookingRouter = express.Router();
 
-// Use bookingRouter instead of router
 bookingRouter.post("/", createBooking);
 bookingRouter.get("/", getBookings);
 
