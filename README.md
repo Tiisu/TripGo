@@ -107,7 +107,7 @@ Ensure your MongoDB server is running and properly connected to the backend.
 We welcome contributions to enhance the functionality of TripGo! If you'd like to contribute:
 
 1. Fork the repository.
-2. Create a new branch (e.g., `feature/my-feature`).
+2. Create a new branch 
 3. Make your changes and commit them.
 4. Push your changes to your forked repository.
 5. Submit a pull request with a description of your changes.
