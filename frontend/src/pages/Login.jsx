@@ -70,7 +70,7 @@ const LoginPage = () => {
         Welcome to <span className="text-blue-500">TripGo</span>
       </h1>
       <div className="bg-white/20 p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-3xl font-semibold text-center text-blue-500">
+        <h2 className="text-3xl font-semibold text-center text-black">
           {isLogin ? "Login" : "Register"}
         </h2>
         <form onSubmit={onSubmitHandler} className="space-y-4 mt-6">
