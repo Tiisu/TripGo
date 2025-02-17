@@ -130,6 +130,7 @@ const TourDetails = () => {
         <div className="text-center mt-12">
           <button
             onClick={() => {
+              scrollTo(0, 0);
               if (!user) {
                 // If user is not logged in, navigate to the login page
                 navigate("/login");

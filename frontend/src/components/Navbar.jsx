@@ -143,7 +143,7 @@ const Navbar = () => {
                     ? "text-blue-500 font-bold"
                     : ""
                 }`}
-                onClick={() => setMenuOpen(false)}
+                onClick={() => scrollTo(0, 0) && setMenuOpen(false)}
               >
                 Tours
               </Link>
