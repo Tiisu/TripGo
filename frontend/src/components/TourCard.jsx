@@ -63,9 +63,7 @@ const TourCard = ({ tour }) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link to={`/tours/${id}`} onClick={() => scrollTo(0, 0)}>
-              Book
-            </Link>
+            <Link to={`/tours/${id}`}>Book</Link>
           </motion.button>
         </div>
       </div>
