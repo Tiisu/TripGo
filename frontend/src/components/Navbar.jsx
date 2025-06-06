@@ -84,6 +84,14 @@ const Navbar = () => {
         </ul>
         {user ? (
           <div className="flex items-center gap-4">
+            <Link
+              to="/my-bookings"
+              className={`hover:text-blue-500 ${
+                location.pathname === "/my-bookings" ? "text-blue-500 font-bold" : ""
+              }`}
+            >
+              My Bookings
+            </Link>
             <div className="relative group">
               <img src={assets.user} alt="profile" width={40} />
               {/* Tooltip for user name */}
@@ -151,6 +159,19 @@ const Navbar = () => {
 
             {user ? (
               <>
+                <li>
+                  <Link
+                    to="/my-bookings"
+                    className={`hover:text-blue-500 ${
+                      location.pathname === "/my-bookings"
+                        ? "text-blue-500 font-bold"
+                        : ""
+                    }`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    My Bookings
+                  </Link>
+                </li>
                 <li>
                   <button
                     onClick={() => {

@@ -11,6 +11,7 @@ const TourDetails = () => {
   const { id } = useParams();
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState("");
 
   useEffect(() => {
     const fetchTour = async () => {
@@ -19,6 +20,10 @@ const TourDetails = () => {
         const data = await response.json();
         if (data.success) {
           setTour(data.tour);
+          // Set the first available date as default
+          if (data.tour.availableDates && data.tour.availableDates.length > 0) {
+            setSelectedDate(data.tour.availableDates[0]);
+          }
         }
       } catch (error) {
         console.error("Error fetching tour:", error);
@@ -30,8 +35,23 @@ const TourDetails = () => {
     fetchTour();
   }, [id, backendUrl]);
 
-  if (loading) return <div className="flex justify-center items-center h-64"><div className="text-lg text-gray-600">Loading tour details...</div></div>;
-  if (!tour) return <div className="flex justify-center items-center h-64"><div className="text-lg text-red-600">Tour not found</div></div>;
+  // Render loading state
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-lg text-gray-600">Loading tour details...</div>
+      </div>
+    );
+  }
+
+  // Render error state
+  if (!tour) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-lg text-red-600">Tour not found</div>
+      </div>
+    );
+  }
 
   const {
     photo,
@@ -45,8 +65,6 @@ const TourDetails = () => {
     availableDates,
     avgRating,
   } = tour;
-
-  const [selectedDate, setSelectedDate] = useState(availableDates[0]);
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
@@ -137,14 +155,9 @@ const TourDetails = () => {
             onChange={handleDateChange}
             className="w-full p-3 border border-gray-300 rounded-xl bg-white/20 shadow-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
           >
-            {availableDates.map((date, index) => (
+            {availableDates && availableDates.map((date, index) => (
               <option key={index} value={date}>
-                {new Date(date).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                {date}
               </option>
             ))}
           </select>
@@ -175,27 +188,31 @@ const TourDetails = () => {
           <div className="mt-4">
             {/* Display average rating stars */}
             <div className="flex justify-center mb-4">
-              {renderStars(Math.round(avgRating))}
+              {renderStars(Math.round(avgRating || 0))}
             </div>
-            <p className="text-lg text-gray-600">{reviews.length} reviews</p>
+            <p className="text-lg text-gray-600">{reviews ? reviews.length : 0} reviews</p>
           </div>
 
           {/* Individual Reviews */}
           <div className="mt-8 space-y-6">
-            {reviews.map((review, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center bg-white/20 p-6 border rounded-xl shadow-lg space-y-3"
-              >
-                <div className="text-xl font-semibold text-gray-700">
-                  {review.name}
+            {reviews && reviews.length > 0 ? (
+              reviews.map((review, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col items-center bg-white/20 p-6 border rounded-xl shadow-lg space-y-3"
+                >
+                  <div className="text-xl font-semibold text-gray-700">
+                    {review.name}
+                  </div>
+                  <div className="flex space-x-1">
+                    {renderStars(Math.round(review.rating || 0))}
+                  </div>
+                  <p className="text-lg text-gray-600 mt-2">{review.comment}</p>
                 </div>
-                <div className="flex space-x-1">
-                  {renderStars(Math.round(review.rating))}
-                </div>
-                <p className="text-lg text-gray-600 mt-2">{review.comment}</p>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-gray-600">No reviews yet</p>
+            )}
           </div>
         </div>
       </div>

@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Booking from "./pages/Booking";
 import Invoice from "./pages/Invoice";
 import About from "./pages/About";
+import MyBookings from "./pages/MyBookings";
 
 // Admin imports
 import AdminContextProvider from "./context/AdminContext";
@@ -89,6 +90,15 @@ const App = () => {
             <Navbar />
             <main className="flex-1">
               <Invoice />
+            </main>
+            <Footer />
+          </div>
+        } />
+        <Route path="/my-bookings" element={
+          <div className="flex flex-col min-h-screen px-4 sm:px-8 md:px-10 lg:px-22 bg-gradient-to-b from-sky-100 to-indigo-100">
+            <Navbar />
+            <main className="flex-1">
+              <MyBookings />
             </main>
             <Footer />
           </div>

@@ -2,19 +2,25 @@ import React, { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
+import { useTours } from "../context/ToursContext";
 import { motion } from "framer-motion";
 
 const Booking = () => {
-  const { user } = useContext(AppContext);
+  const { user, backendUrl } = useContext(AppContext);
+  const { backendUrl: toursBackendUrl } = useTours();
   const location = useLocation();
   const navigate = useNavigate();
   const tour = location.state?.tour;
 
+  // Use the backend URL from AppContext or ToursContext
+  const apiUrl = backendUrl || toursBackendUrl || "http://localhost:4000";
+
   if (!tour || !user) {
-    return navigate("/login");
+    navigate("/login");
+    return null;
   }
 
-  const { title, price } = tour;
+  const { title, price, maxGroupSize, _id } = tour;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -41,32 +47,34 @@ const Booking = () => {
       return;
     }
 
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/bookings`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...formData,
-            tourId: tour.id,
-            tourTitle: tour.title,
-            totalPrice,
-          }),
-        }
-      );
+    // Validate number of travelers against max group size
+    if (parseInt(formData.travelers) > maxGroupSize) {
+      toast.error(`Maximum group size for this tour is ${maxGroupSize} people.`);
+      return;
+    }
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to create booking");
-      }
+    try {
+      const response = await fetch(`${apiUrl}/api/bookings`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          tourId: _id, // Use _id instead of id for MongoDB tours
+          tourTitle: title,
+          totalPrice,
+        }),
+      });
 
       const data = await response.json();
 
+      if (!data.success) {
+        throw new Error(data.message || "Failed to create booking");
+      }
+
       toast.success("Booking successful!");
-      navigate("/invoice", { state: { booking: data.booking } });
+      navigate("/invoice", { state: { booking: data.booking, tour } });
     } catch (error) {
       console.error("Booking error:", error);
       toast.error("Error: " + error.message);
@@ -139,12 +147,13 @@ const Booking = () => {
         </div>
         <div>
           <label className="block text-lg font-semibold">
-            Number of Travelers
+            Number of Travelers (Max: {maxGroupSize})
           </label>
           <motion.input
             type="number"
             name="travelers"
             min="1"
+            max={maxGroupSize}
             value={formData.travelers}
             onChange={handleChange}
             className="w-full p-3 border rounded-lg bg-inherit"
