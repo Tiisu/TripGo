@@ -9,6 +9,7 @@ import {
   getFeaturedTours
 } from "../controllers/tourController.js";
 import { adminAuth, userAuth } from "../middleware/adminAuth.js";
+import upload from "../middleware/upload.js";
 
 const tourRouter = express.Router();
 
@@ -21,8 +22,8 @@ tourRouter.get("/:id", getTour);
 tourRouter.post("/:id/review", userAuth, addReview);
 
 // Admin routes (require admin authentication)
-tourRouter.post("/", adminAuth, createTour);
-tourRouter.put("/:id", adminAuth, updateTour);
+tourRouter.post("/", adminAuth, upload.single('photo'), createTour);
+tourRouter.put("/:id", adminAuth, upload.single('photo'), updateTour);
 tourRouter.delete("/:id", adminAuth, deleteTour);
 
 export default tourRouter;

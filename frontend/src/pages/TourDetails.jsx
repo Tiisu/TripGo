@@ -1,16 +1,37 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Calendar, DollarSign, MapPin, Users, Star } from "lucide-react";
-import tourData from "../assets/data/tour.js";
+import { useTours } from "../context/ToursContext";
 import { AppContext } from "../context/AppContext";
 
 const TourDetails = () => {
   const { user } = useContext(AppContext);
+  const { getTourById, backendUrl } = useTours();
   const navigate = useNavigate();
   const { id } = useParams();
-  const tour = tourData.find((tour) => tour.id === id);
+  const [tour, setTour] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!tour) return <div>Tour not found</div>;
+  useEffect(() => {
+    const fetchTour = async () => {
+      try {
+        const response = await fetch(`${backendUrl}/api/tours/${id}`);
+        const data = await response.json();
+        if (data.success) {
+          setTour(data.tour);
+        }
+      } catch (error) {
+        console.error("Error fetching tour:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTour();
+  }, [id, backendUrl]);
+
+  if (loading) return <div className="flex justify-center items-center h-64"><div className="text-lg text-gray-600">Loading tour details...</div></div>;
+  if (!tour) return <div className="flex justify-center items-center h-64"><div className="text-lg text-red-600">Tour not found</div></div>;
 
   const {
     photo,
@@ -53,9 +74,12 @@ const TourDetails = () => {
         {/* Tour Image */}
         <div className="mb-8">
           <img
-            src={photo}
+            src={photo ? (photo.startsWith('http') ? photo : `${backendUrl}${photo}`) : "/api/placeholder/800/400"}
             alt={title}
             className="w-full h-96 object-cover rounded-xl shadow-lg hover:opacity-90 transition duration-300"
+            onError={(e) => {
+              e.target.src = "/api/placeholder/800/400";
+            }}
           />
         </div>
 

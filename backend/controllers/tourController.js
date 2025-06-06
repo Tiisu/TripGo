@@ -68,13 +68,27 @@ export const createTour = async (req, res) => {
       maxGroupSize,
       desc,
       availableDates,
-      photo,
       featured
     } = req.body;
 
     // Validation
-    if (!title || !city || !distance || !price || !maxGroupSize || !desc || !photo) {
+    if (!title || !city || !distance || !price || !maxGroupSize || !desc) {
       return res.json({ success: false, message: "All required fields must be provided" });
+    }
+
+    // Check if image was uploaded
+    if (!req.file) {
+      return res.json({ success: false, message: "Tour image is required" });
+    }
+
+    // Parse availableDates if it's a string
+    let parsedDates = [];
+    if (availableDates) {
+      try {
+        parsedDates = typeof availableDates === 'string' ? JSON.parse(availableDates) : availableDates;
+      } catch (e) {
+        parsedDates = [];
+      }
     }
 
     const newTour = new tourModel({
@@ -84,9 +98,9 @@ export const createTour = async (req, res) => {
       price: parseFloat(price),
       maxGroupSize: parseInt(maxGroupSize),
       desc,
-      availableDates: availableDates || [],
-      photo,
-      featured: featured || false,
+      availableDates: parsedDates,
+      photo: `/uploads/tours/${req.file.filename}`, // Store relative path for uploaded files
+      featured: featured === 'true' || featured === true,
       reviews: [],
       avgRating: 0
     });
@@ -103,12 +117,33 @@ export const createTour = async (req, res) => {
 export const updateTour = async (req, res) => {
   try {
     const { id } = req.params;
-    const updateData = req.body;
+    const updateData = { ...req.body };
 
     // Remove fields that shouldn't be updated directly
     delete updateData.reviews;
     delete updateData.avgRating;
     delete updateData._id;
+
+    // Handle availableDates parsing
+    if (updateData.availableDates) {
+      try {
+        updateData.availableDates = typeof updateData.availableDates === 'string'
+          ? JSON.parse(updateData.availableDates)
+          : updateData.availableDates;
+      } catch (e) {
+        updateData.availableDates = [];
+      }
+    }
+
+    // Handle featured boolean conversion
+    if (updateData.featured !== undefined) {
+      updateData.featured = updateData.featured === 'true' || updateData.featured === true;
+    }
+
+    // If new image is uploaded, update photo path
+    if (req.file) {
+      updateData.photo = `/uploads/tours/${req.file.filename}`;
+    }
 
     const tour = await tourModel.findByIdAndUpdate(
       id,

@@ -16,9 +16,10 @@ const TourManagement = () => {
     maxGroupSize: "",
     desc: "",
     availableDates: "",
-    photo: "",
     featured: false,
   });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
     fetchTours();
@@ -41,38 +42,81 @@ const TourManagement = () => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const tourData = {
-      ...formData,
-      distance: parseInt(formData.distance),
-      price: parseFloat(formData.price),
-      maxGroupSize: parseInt(formData.maxGroupSize),
-      availableDates: formData.availableDates.split(",").map(date => date.trim()).filter(date => date)
-    };
+
+    // Validate required fields
+    if (!formData.title || !formData.city || !formData.distance || !formData.price || !formData.maxGroupSize || !formData.desc) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    // For new tours, image is required
+    if (!editingTour && !selectedImage) {
+      toast.error("Please select an image for the tour");
+      return;
+    }
+
+    // Create FormData for file upload
+    const formDataToSend = new FormData();
+    formDataToSend.append('title', formData.title);
+    formDataToSend.append('city', formData.city);
+    formDataToSend.append('distance', formData.distance);
+    formDataToSend.append('price', formData.price);
+    formDataToSend.append('maxGroupSize', formData.maxGroupSize);
+    formDataToSend.append('desc', formData.desc);
+    formDataToSend.append('featured', formData.featured);
+
+    // Handle available dates
+    const availableDatesArray = formData.availableDates.split(",").map(date => date.trim()).filter(date => date);
+    formDataToSend.append('availableDates', JSON.stringify(availableDatesArray));
+
+    // Add image if selected
+    if (selectedImage) {
+      formDataToSend.append('photo', selectedImage);
+    }
 
     let result;
     if (editingTour) {
-      result = await apiCall(`/api/tours/${editingTour._id}`, {
+      result = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tours/${editingTour._id}`, {
         method: "PUT",
-        body: JSON.stringify(tourData)
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+        },
+        body: formDataToSend
       });
     } else {
-      result = await apiCall("/api/tours", {
+      result = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tours`, {
         method: "POST",
-        body: JSON.stringify(tourData)
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+        },
+        body: formDataToSend
       });
     }
 
-    if (result.success) {
+    const data = await result.json();
+
+    if (data.success) {
       toast.success(editingTour ? "Tour updated successfully!" : "Tour created successfully!");
       setShowModal(false);
       setEditingTour(null);
       resetForm();
       fetchTours();
     } else {
-      toast.error(result.message || "Operation failed");
+      toast.error(data.message || "Operation failed");
     }
   };
 
@@ -86,9 +130,10 @@ const TourManagement = () => {
       maxGroupSize: tour.maxGroupSize.toString(),
       desc: tour.desc,
       availableDates: tour.availableDates.join(", "),
-      photo: tour.photo,
       featured: tour.featured,
     });
+    setSelectedImage(null);
+    setImagePreview(tour.photo ? (tour.photo.startsWith('http') ? tour.photo : `${import.meta.env.VITE_BACKEND_URL}${tour.photo}`) : null);
     setShowModal(true);
   };
 
@@ -116,9 +161,10 @@ const TourManagement = () => {
       maxGroupSize: "",
       desc: "",
       availableDates: "",
-      photo: "",
       featured: false,
     });
+    setSelectedImage(null);
+    setImagePreview(null);
   };
 
   const openAddModal = () => {
@@ -153,7 +199,7 @@ const TourManagement = () => {
         {tours.map((tour) => (
           <div key={tour._id} className="bg-white rounded-lg shadow-md overflow-hidden">
             <img
-              src={tour.photo}
+              src={tour.photo ? (tour.photo.startsWith('http') ? tour.photo : `${import.meta.env.VITE_BACKEND_URL}${tour.photo}`) : "/api/placeholder/400/300"}
               alt={tour.title}
               className="w-full h-48 object-cover"
               onError={(e) => {
@@ -270,16 +316,24 @@ const TourManagement = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Photo URL *
+                    Tour Image *
                   </label>
                   <input
-                    type="url"
-                    name="photo"
-                    value={formData.photo}
-                    onChange={handleInputChange}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
+                    required={!editingTour}
                   />
+                  {imagePreview && (
+                    <div className="mt-2">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="w-32 h-24 object-cover rounded-md border"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
               

@@ -14,6 +14,7 @@ import About from "./pages/About";
 
 // Admin imports
 import AdminContextProvider from "./context/AdminContext";
+import ToursContextProvider from "./context/ToursContext";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -25,8 +26,9 @@ import AdminProtectedRoute from "./components/admin/AdminProtectedRoute";
 const App = () => {
   return (
     <AdminContextProvider>
-      <ToastContainer theme="dark" position="bottom-right" autoClose={1000} />
-      <Routes>
+      <ToursContextProvider>
+        <ToastContainer theme="dark" position="bottom-right" autoClose={1000} />
+        <Routes>
         {/* Public Routes */}
         <Route path="/" element={
           <div className="flex flex-col min-h-screen px-4 sm:px-8 md:px-10 lg:px-22 bg-gradient-to-b from-sky-100 to-indigo-100">
@@ -104,7 +106,8 @@ const App = () => {
           <Route path="bookings" element={<BookingManagement />} />
           <Route path="users" element={<UserManagement />} />
         </Route>
-      </Routes>
+        </Routes>
+      </ToursContextProvider>
     </AdminContextProvider>
   );
 };

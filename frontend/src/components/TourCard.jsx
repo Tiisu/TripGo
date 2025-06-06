@@ -14,7 +14,8 @@ const fadeIn = {
 };
 
 const TourCard = ({ tour }) => {
-  const { id, title, photo, desc, price, featured, city, avgRating } = tour;
+  const { _id, title, photo, desc, price, featured, city, avgRating } = tour;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
   return (
     <motion.div
@@ -25,7 +26,14 @@ const TourCard = ({ tour }) => {
       variants={fadeIn}
     >
       <div className="relative">
-        <img src={photo} alt="tourimg" className="w-full h-64 object-cover" />
+        <img
+          src={photo ? (photo.startsWith('http') ? photo : `${backendUrl}${photo}`) : "/api/placeholder/400/300"}
+          alt="tourimg"
+          className="w-full h-64 object-cover"
+          onError={(e) => {
+            e.target.src = "/api/placeholder/400/300";
+          }}
+        />
         {featured && (
           <span className="absolute top-4 left-4 bg-blue-500 text-white py-1 px-3 rounded-md text-sm font-semibold">
             Featured
@@ -45,7 +53,7 @@ const TourCard = ({ tour }) => {
 
         <h3 className="text-xl font-semibold mb-4">
           <Link
-            to={`/tours/${id}`}
+            to={`/tours/${_id}`}
             onClick={() => scrollTo(0, 0)}
             className="text-blue-600 hover:underline"
           >
@@ -63,7 +71,7 @@ const TourCard = ({ tour }) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link to={`/tours/${id}`}>Book</Link>
+            <Link to={`/tours/${_id}`}>Book</Link>
           </motion.button>
         </div>
       </div>

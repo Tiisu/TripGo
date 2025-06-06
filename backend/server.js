@@ -12,6 +12,10 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+
+// Serve static files for uploaded images
+app.use('/uploads', express.static('uploads'));
+
 await connectDB();
 
 app.use("/api/user", userRouter);
