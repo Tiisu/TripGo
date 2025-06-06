@@ -12,6 +12,8 @@ import Booking from "./pages/Booking";
 import Invoice from "./pages/Invoice";
 import About from "./pages/About";
 import MyBookings from "./pages/MyBookingsSimple";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentFailure from "./pages/PaymentFailure";
 
 // Admin imports
 import AdminContextProvider from "./context/AdminContext";
@@ -103,6 +105,8 @@ const App = () => {
             <Footer />
           </div>
         } />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-failure" element={<PaymentFailure />} />
 
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLogin />} />

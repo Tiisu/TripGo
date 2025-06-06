@@ -58,7 +58,7 @@ const createTestBooking = async () => {
     console.log("- Email:", savedBooking.email);
     console.log("- Tour:", savedBooking.tourTitle);
     console.log("- Travelers:", savedBooking.travelers);
-    console.log("- Total Price: ₹" + savedBooking.totalPrice);
+    console.log("- Total Price: GH₵" + savedBooking.totalPrice);
     console.log("- Status:", savedBooking.status);
     console.log("- Created:", savedBooking.createdAt);
 

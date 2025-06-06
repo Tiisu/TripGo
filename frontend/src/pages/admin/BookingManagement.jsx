@@ -113,7 +113,7 @@ const BookingManagement = () => {
                         Travelers: {booking.travelers}
                       </div>
                       <div className="text-sm text-gray-900">
-                        Total: ₹{booking.totalPrice.toLocaleString()}
+                        Total: GH₵{booking.totalPrice.toLocaleString()}
                       </div>
                       <div className="text-sm text-gray-500">
                         {new Date(booking.createdAt).toLocaleDateString()}

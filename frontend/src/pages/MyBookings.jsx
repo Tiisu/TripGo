@@ -153,7 +153,7 @@ const MyBookings = () => {
                     <div>
                       <p><strong>Booking Date:</strong> {new Date(booking.createdAt).toLocaleDateString()}</p>
                       <p><strong>Travelers:</strong> {booking.travelers} people</p>
-                      <p><strong>Total Price:</strong> ₹{booking.totalPrice.toLocaleString()}</p>
+                      <p><strong>Total Price:</strong> GH₵{booking.totalPrice.toLocaleString()}</p>
                     </div>
                     <div>
                       <p><strong>Name:</strong> {booking.name}</p>

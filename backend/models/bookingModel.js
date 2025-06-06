@@ -36,8 +36,29 @@ const bookingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["pending", "confirmed"],
+    enum: ["pending", "confirmed", "cancelled"],
     default: "pending",
+  },
+  paymentStatus: {
+    type: String,
+    enum: ["pending", "paid", "failed", "refunded"],
+    default: "pending",
+  },
+  paymentReference: {
+    type: String,
+    unique: true,
+    sparse: true, // Allows multiple null values
+  },
+  paystackReference: {
+    type: String,
+    sparse: true,
+  },
+  paymentAmount: {
+    type: Number,
+    min: 0,
+  },
+  paymentDate: {
+    type: Date,
   },
   createdAt: {
     type: Date,

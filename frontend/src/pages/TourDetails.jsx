@@ -119,7 +119,7 @@ const TourDetails = () => {
               <DollarSign className="mr-2 text-blue-600" />
               Price
             </h3>
-            <p className="text-2xl text-gray-800 mt-3">₹{price}/person</p>
+            <p className="text-2xl text-gray-800 mt-3">GH₵{price}/person</p>
           </div>
 
           {/* Location Section */}

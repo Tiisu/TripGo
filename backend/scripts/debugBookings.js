@@ -71,7 +71,7 @@ const debugBookings = async () => {
       
       console.log(`Found ${userBookings.length} bookings for ${testUser.email}`);
       userBookings.forEach((booking, index) => {
-        console.log(`  ${index + 1}. ${booking.tourTitle} - ₹${booking.totalPrice} - ${booking.status}`);
+        console.log(`  ${index + 1}. ${booking.tourTitle} - GH₵${booking.totalPrice} - ${booking.status}`);
       });
     }
 

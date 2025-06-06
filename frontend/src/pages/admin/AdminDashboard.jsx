@@ -66,7 +66,7 @@ const AdminDashboard = () => {
     },
     {
       title: "Total Revenue",
-      value: `₹${stats?.totalRevenue?.toLocaleString() || 0}`,
+      value: `GH₵${stats?.totalRevenue?.toLocaleString() || 0}`,
       icon: "💰",
       color: "bg-green-600",
     },
@@ -130,7 +130,7 @@ const AdminDashboard = () => {
                     {booking.tourTitle}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ₹{booking.totalPrice.toLocaleString()}
+                    GH₵{booking.totalPrice.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span

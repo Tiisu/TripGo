@@ -17,7 +17,7 @@ const testBookingFlow = async () => {
     }
 
     console.log(`Found tour: ${tour.title} (ID: ${tour._id})`);
-    console.log(`Price: ₹${tour.price}, Max Group Size: ${tour.maxGroupSize}`);
+    console.log(`Price: GH₵${tour.price}, Max Group Size: ${tour.maxGroupSize}`);
 
     // Test booking data
     const testBooking = {
@@ -47,7 +47,7 @@ const testBookingFlow = async () => {
     const allBookings = await bookingModel.find().sort({ createdAt: -1 }).limit(5);
     console.log(`\n📋 Recent bookings (${allBookings.length}):`);
     allBookings.forEach((booking, index) => {
-      console.log(`${index + 1}. ${booking.name} - ${booking.tourTitle} - ₹${booking.totalPrice}`);
+      console.log(`${index + 1}. ${booking.name} - ${booking.tourTitle} - GH₵${booking.totalPrice}`);
     });
 
     // Clean up test booking

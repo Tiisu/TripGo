@@ -218,7 +218,7 @@ const TourManagement = () => {
               <p className="text-gray-600 text-sm mb-2">{tour.city}</p>
               <p className="text-gray-700 text-sm mb-3 line-clamp-2">{tour.desc}</p>
               <div className="flex justify-between items-center mb-3">
-                <span className="text-lg font-bold text-blue-600">₹{tour.price.toLocaleString()}</span>
+                <span className="text-lg font-bold text-blue-600">GH₵{tour.price.toLocaleString()}</span>
                 <span className="text-sm text-gray-500">Max {tour.maxGroupSize} people</span>
               </div>
               <div className="flex space-x-2">

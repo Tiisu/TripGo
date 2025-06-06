@@ -6,6 +6,7 @@ import userRouter from "./routes/userRoutes.js";
 import bookingRouter from "./routes/bookingRoute.js";
 import adminRouter from "./routes/adminRoutes.js";
 import tourRouter from "./routes/tourRoutes.js";
+import paymentRouter from "./routes/paymentRoutes.js";
 
 const PORT = process.env.PORT || 4000;
 const app = express();
@@ -22,6 +23,7 @@ app.use("/api/user", userRouter);
 app.use("/api/bookings", bookingRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/tours", tourRouter);
+app.use("/api/payments", paymentRouter);
 
 app.get("/", (req, res) => {
   res.send("API is Working!");

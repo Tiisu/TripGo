@@ -63,7 +63,7 @@ const TourCard = ({ tour }) => {
 
         <div className="flex justify-between items-center">
           <h5 className="text-xl font-semibold text-gray-800">
-            ₹{price} <span className="text-sm text-gray-500">/person</span>
+            GH₵{price} <span className="text-sm text-gray-500">/person</span>
           </h5>
           <motion.button
             className="bg-gradient-to-b from-sky-500 to-blue-500 text-white hover:from-sky-800 hover:to-blue-700 py-2 px-4 rounded-md transition-colors"

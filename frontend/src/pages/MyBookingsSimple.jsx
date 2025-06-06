@@ -115,14 +115,27 @@ const MyBookingsSimple = () => {
                 </div>
                 <div>
                   <p><strong>Travelers:</strong> {booking.travelers}</p>
-                  <p><strong>Total:</strong> ₹{booking.totalPrice}</p>
-                  <p><strong>Status:</strong> 
+                  <p><strong>Total:</strong> GH₵{booking.totalPrice}</p>
+                  <p><strong>Status:</strong>
                     <span className={`ml-1 px-2 py-1 rounded text-xs ${
                       booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                     }`}>
                       {booking.status}
                     </span>
                   </p>
+                  {booking.paymentStatus && (
+                    <p><strong>Payment:</strong>
+                      <span className={`ml-1 px-2 py-1 rounded text-xs ${
+                        booking.paymentStatus === 'paid'
+                          ? 'bg-green-100 text-green-800'
+                          : booking.paymentStatus === 'pending'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {booking.paymentStatus}
+                      </span>
+                    </p>
+                  )}
                 </div>
               </div>
               {booking.specialRequests && (

@@ -30,7 +30,7 @@ const InvoicePDF = ({ booking }) => (
         <Text style={styles.label}>Package Details</Text>
         <Text>Tour: {booking.tourTitle}</Text>
         <Text>Number of Travelers: {booking.travelers}</Text>
-        <Text>Total Price: ₹{booking.totalPrice}</Text>
+        <Text>Total Price: GH₵{booking.totalPrice}</Text>
       </View>
     </Page>
   </Document>
@@ -79,8 +79,32 @@ const Invoice = () => {
           {booking.travelers}
         </p>
         <p>
-          <strong>Total Price:</strong> ₹{booking.totalPrice}
+          <strong>Total Price:</strong> GH₵{booking.totalPrice}
         </p>
+        {booking.paymentStatus && (
+          <p>
+            <strong>Payment Status:</strong>
+            <span className={`ml-2 px-2 py-1 rounded text-sm font-semibold ${
+              booking.paymentStatus === 'paid'
+                ? 'bg-green-100 text-green-800'
+                : booking.paymentStatus === 'pending'
+                ? 'bg-yellow-100 text-yellow-800'
+                : 'bg-red-100 text-red-800'
+            }`}>
+              {booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1)}
+            </span>
+          </p>
+        )}
+        {booking.paymentReference && (
+          <p>
+            <strong>Payment Reference:</strong> {booking.paymentReference}
+          </p>
+        )}
+        {booking.paymentDate && (
+          <p>
+            <strong>Payment Date:</strong> {new Date(booking.paymentDate).toLocaleDateString()}
+          </p>
+        )}
       </div>
       <div className="mt-6">
         {booking ? (

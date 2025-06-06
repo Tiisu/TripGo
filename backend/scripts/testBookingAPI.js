@@ -45,7 +45,7 @@ const testBookingAPI = async () => {
 
     console.log(`Found ${bookingsByEmail.length} bookings for test@example.com:`);
     bookingsByEmail.forEach((booking, index) => {
-      console.log(`${index + 1}. ${booking.tourTitle} - ₹${booking.totalPrice} - ${booking.status}`);
+      console.log(`${index + 1}. ${booking.tourTitle} - GH₵${booking.totalPrice} - ${booking.status}`);
     });
 
     // Test the API endpoint logic

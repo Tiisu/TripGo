@@ -59,7 +59,7 @@ export const createBooking = async (req, res) => {
     if (Math.abs(expectedPrice - providedPrice) > 0.01) {
       return res.json({
         success: false,
-        message: `Price mismatch. Expected: ₹${expectedPrice}, Provided: ₹${providedPrice}`
+        message: `Price mismatch. Expected: GH₵${expectedPrice}, Provided: GH₵${providedPrice}`
       });
     }
 

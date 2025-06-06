@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
 import { useTours } from "../context/ToursContext";
 import { motion } from "framer-motion";
+import { PaystackButton } from "react-paystack";
 
 const Booking = () => {
   const { user, backendUrl } = useContext(AppContext);
@@ -30,6 +31,22 @@ const Booking = () => {
     specialRequests: "",
   });
   const [totalPrice, setTotalPrice] = useState(price);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+
+  // Paystack configuration
+  const paystackConfig = {
+    reference: new Date().getTime().toString(),
+    email: formData.email,
+    amount: Math.round(totalPrice * 100), // Amount in kobo (pesewas for GHS)
+    publicKey: "pk_test_0d42789d5e674f5ba322ab3df0f9878195966439", // From your .env
+    currency: "GHS",
+    metadata: {
+      name: formData.name,
+      phone: formData.phone,
+      tourTitle: title,
+      travelers: formData.travelers,
+    },
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,15 +70,73 @@ const Booking = () => {
       return;
     }
 
+    // This function will be called when payment is successful
+    // The actual payment processing is handled by the PaystackButton
+    toast.info("Please proceed with payment to confirm your booking.");
+  };
+
+  // Handle successful payment
+  const handlePaymentSuccess = async (reference) => {
+    setIsProcessingPayment(true);
     try {
-      const response = await fetch(`${apiUrl}/api/bookings`, {
+      toast.success("Payment successful! Verifying...");
+
+      // Verify payment on the backend
+      const response = await fetch(`${apiUrl}/api/payments/verify/${reference.reference}`);
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success("Booking confirmed successfully!");
+        navigate("/payment-success", {
+          state: {
+            booking: data.booking,
+            reference: reference.reference
+          }
+        });
+      } else {
+        throw new Error(data.message || "Payment verification failed");
+      }
+    } catch (error) {
+      console.error("Payment verification error:", error);
+      toast.error("Error verifying payment: " + error.message);
+      navigate("/payment-failure", {
+        state: {
+          reference: reference.reference,
+          message: error.message
+        }
+      });
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  };
+
+  // Handle payment closure (when user closes payment modal)
+  const handlePaymentClose = () => {
+    toast.info("Payment was cancelled. You can try again anytime.");
+  };
+
+  // Initialize payment with backend
+  const initializePayment = async () => {
+    if (!formData.name || !formData.email || !formData.phone) {
+      toast.error("Please fill out all required fields.");
+      return false;
+    }
+
+    if (parseInt(formData.travelers) > maxGroupSize) {
+      toast.error(`Maximum group size for this tour is ${maxGroupSize} people.`);
+      return false;
+    }
+
+    try {
+      setIsProcessingPayment(true);
+      const response = await fetch(`${apiUrl}/api/payments/initialize`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           ...formData,
-          tourId: _id, // Use _id instead of id for MongoDB tours
+          tourId: _id,
           tourTitle: title,
           totalPrice,
         }),
@@ -69,21 +144,36 @@ const Booking = () => {
 
       const data = await response.json();
 
-      if (!data.success) {
-        throw new Error(data.message || "Failed to create booking");
+      if (data.success) {
+        // Redirect to Paystack payment page
+        window.location.href = data.data.authorization_url;
+        return true;
+      } else {
+        throw new Error(data.message || "Failed to initialize payment");
       }
-
-      toast.success("Booking successful!");
-      navigate("/invoice", { state: { booking: data.booking, tour } });
     } catch (error) {
-      console.error("Booking error:", error);
+      console.error("Payment initialization error:", error);
       toast.error("Error: " + error.message);
+      setIsProcessingPayment(false);
+      return false;
     }
   };
 
   useEffect(() => {
     setTotalPrice(price * parseInt(formData.travelers, 10));
   }, [formData.travelers, price, tour]);
+
+  // Update Paystack config when form data or total price changes
+  useEffect(() => {
+    paystackConfig.email = formData.email;
+    paystackConfig.amount = Math.round(totalPrice * 100);
+    paystackConfig.metadata = {
+      name: formData.name,
+      phone: formData.phone,
+      tourTitle: title,
+      travelers: formData.travelers,
+    };
+  }, [formData, totalPrice, title]);
 
   // Auto-populate user data when user context is available
   useEffect(() => {
@@ -190,16 +280,18 @@ const Booking = () => {
           />
         </div>
         <div>
-          <h3 className="text-lg font-semibold">Total Price: ₹{totalPrice}</h3>
+          <h3 className="text-lg font-semibold">Total Price: GH₵{totalPrice}</h3>
         </div>
         <motion.button
-          type="submit"
-          className="w-full bg-gradient-to-b from-sky-500 to-blue-500 text-white hover:from-sky-800 hover:to-blue-700  p-3 rounded-lg bg-inherit"
+          type="button"
+          onClick={initializePayment}
+          disabled={isProcessingPayment}
+          className="w-full bg-gradient-to-b from-sky-500 to-blue-500 text-white hover:from-sky-800 hover:to-blue-700 p-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          Confirm Booking
+          {isProcessingPayment ? "Processing..." : "Proceed to Payment"}
         </motion.button>
       </form>
     </motion.div>
