@@ -23,8 +23,8 @@ const Booking = () => {
   const { title, price, maxGroupSize, _id } = tour;
 
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    name: user?.name || "",
+    email: user?.email || "",
     phone: "",
     travelers: 1,
     specialRequests: "",
@@ -85,6 +85,17 @@ const Booking = () => {
     setTotalPrice(price * parseInt(formData.travelers, 10));
   }, [formData.travelers, price, tour]);
 
+  // Auto-populate user data when user context is available
+  useEffect(() => {
+    if (user) {
+      setFormData(prevData => ({
+        ...prevData,
+        name: user.name || prevData.name,
+        email: user.email || prevData.email,
+      }));
+    }
+  }, [user]);
+
   const formVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -124,8 +135,10 @@ const Booking = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full p-3 border rounded-lg bg-inherit"
+            className="w-full p-3 border rounded-lg bg-inherit bg-gray-100"
             required
+            readOnly
+            title="Email is automatically filled from your account"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}

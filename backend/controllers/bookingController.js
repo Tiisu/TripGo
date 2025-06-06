@@ -1,5 +1,6 @@
 import bookingModel from "../models/bookingModel.js";
 import tourModel from "../models/tourModel.js";
+import userModel from "../models/userModel.js";
 
 // Create a new booking
 export const createBooking = async (req, res) => {
@@ -15,9 +16,18 @@ export const createBooking = async (req, res) => {
       totalPrice,
     } = req.body;
 
+    console.log("Creating booking for email:", email);
+    console.log("Booking data:", { name, email, phone, travelers, tourId, tourTitle, totalPrice });
+
     // Check for missing required fields
     if (!name || !email || !phone || !tourId || !tourTitle || !totalPrice) {
       return res.json({ success: false, message: "Missing required fields" });
+    }
+
+    // Validate that the email belongs to a registered user
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.json({ success: false, message: "Email not associated with a registered user. Please log in with the correct account." });
     }
 
     // Validate tour exists and is active
@@ -68,6 +78,11 @@ export const createBooking = async (req, res) => {
 
     // Save the new booking to the database
     const savedBooking = await newBooking.save();
+
+    console.log("✅ Booking created successfully:");
+    console.log("Booking ID:", savedBooking._id);
+    console.log("Email:", savedBooking.email);
+    console.log("Tour:", savedBooking.tourTitle);
 
     // Respond with the saved booking information
     res.json({

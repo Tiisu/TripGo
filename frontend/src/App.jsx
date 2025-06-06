@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Booking from "./pages/Booking";
 import Invoice from "./pages/Invoice";
 import About from "./pages/About";
-import MyBookings from "./pages/MyBookings";
+import MyBookings from "./pages/MyBookingsSimple";
 
 // Admin imports
 import AdminContextProvider from "./context/AdminContext";

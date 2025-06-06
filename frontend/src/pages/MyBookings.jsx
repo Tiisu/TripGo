@@ -9,35 +9,49 @@ const MyBookings = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (user && user.email) {
+    if (user && user.email && backendUrl) {
       fetchUserBookings();
+    } else if (user && !user.email) {
+      setError("User email not found");
+      setLoading(false);
+    } else if (!backendUrl) {
+      setError("Backend URL not configured");
+      setLoading(false);
     }
-  }, [user]);
+  }, [user, backendUrl]);
 
   const fetchUserBookings = async () => {
     try {
       setLoading(true);
       setError(null);
 
+      if (!user || !user.email) {
+        setError("User email not found");
+        return;
+      }
+
       const url = `${backendUrl}/api/bookings/user?email=${encodeURIComponent(user.email)}`;
       console.log("Fetching bookings from:", url);
-      console.log("User email:", user.email);
+      console.log("User email being used:", user.email);
 
       const response = await fetch(url);
-      const data = await response.json();
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
       console.log("Bookings response:", data);
+      console.log("Number of bookings found:", data.bookings?.length || 0);
 
       if (data.success) {
-        setBookings(data.bookings);
-        console.log("Bookings set:", data.bookings);
+        setBookings(data.bookings || []);
       } else {
         setError(data.message || "Failed to fetch bookings");
-        console.error("API error:", data.message);
       }
     } catch (error) {
-      setError("Failed to fetch bookings: " + error.message);
       console.error("Error fetching bookings:", error);
+      setError("Failed to fetch bookings: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -102,9 +116,18 @@ const MyBookings = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <h2 className="text-3xl font-bold mb-6">
-        My <span className="text-blue-500">Bookings</span>
-      </h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold">
+          My <span className="text-blue-500">Bookings</span>
+        </h2>
+        <button
+          onClick={fetchUserBookings}
+          disabled={loading}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? "Refreshing..." : "Refresh"}
+        </button>
+      </div>
 
       {bookings.length === 0 ? (
         <div className="text-center py-12">

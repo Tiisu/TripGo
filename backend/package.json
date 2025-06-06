@@ -7,7 +7,9 @@
     "seed-tours": "node scripts/seedTours.js",
     "test-booking": "node scripts/testBooking.js",
     "test-booking-api": "node scripts/testBookingAPI.js",
-    "create-test-booking": "node scripts/createTestBooking.js"
+    "create-test-booking": "node scripts/createTestBooking.js",
+    "debug-bookings": "node scripts/debugBookings.js",
+    "fix-orphaned-bookings": "node scripts/fixOrphanedBookings.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
