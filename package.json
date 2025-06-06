@@ -1,0 +1,40 @@
+{
+  "name": "tripgo",
+  "version": "1.0.0",
+  "description": "A comprehensive travel booking platform with admin dashboard",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "node scripts/deploy.js",
+    "deploy:backend": "node scripts/deploy.js --backend",
+    "deploy:frontend": "node scripts/deploy.js --frontend",
+    "deploy:all": "node scripts/deploy.js --all",
+    "setup": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "dev:backend": "cd backend && npm run server",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "start:backend": "cd backend && npm start",
+    "create-admin": "cd backend && npm run create-admin",
+    "seed-tours": "cd backend && npm run seed-tours"
+  },
+  "keywords": [
+    "travel",
+    "booking",
+    "tours",
+    "react",
+    "nodejs",
+    "mongodb",
+    "admin-dashboard",
+    "responsive"
+  ],
+  "author": "TripGo Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Aditya1or0/TripGo.git"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
