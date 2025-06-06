@@ -1,15 +1,28 @@
 {
+  "name": "tripgo-backend",
+  "version": "1.0.0",
+  "description": "TripGo Backend API with admin dashboard support",
   "type": "module",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "dev": "nodemon server.js",
     "server": "nodemon server.js",
+    "build": "echo 'No build step required for Node.js'",
     "create-admin": "node scripts/createAdmin.js",
     "seed-tours": "node scripts/seedTours.js",
     "test-booking": "node scripts/testBooking.js",
     "test-booking-api": "node scripts/testBookingAPI.js",
     "create-test-booking": "node scripts/createTestBooking.js",
     "debug-bookings": "node scripts/debugBookings.js",
-    "fix-orphaned-bookings": "node scripts/fixOrphanedBookings.js"
+    "fix-orphaned-bookings": "node scripts/fixOrphanedBookings.js",
+    "deploy:render": "node scripts/deploy-render.js",
+    "validate-env": "node scripts/validate-env.js",
+    "postinstall": "echo 'Backend dependencies installed successfully'"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
