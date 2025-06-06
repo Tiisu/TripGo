@@ -6,19 +6,13 @@ import bookingRouter from "./routes/bookingRoute.js";
 import adminRouter from "./routes/adminRoutes.js";
 import tourRouter from "./routes/tourRoutes.js";
 import paymentRouter from "./routes/paymentRoutes.js";
-import cors from "cors"; // <-- use import, not require
+const cors = require('cors');
 
 const PORT = process.env.PORT || 4000;
 const app = express();
 
 app.use(express.json());
-app.use(cors({
-  origin: [
-    'https://trip-go-rose.vercel.app', // your deployed frontend
-    'http://localhost:5173'            // for local development
-  ],
-  credentials: true
-}));
+app.use(cors());
 
 // Serve static files for uploaded images
 app.use('/uploads', express.static('uploads'));
@@ -35,7 +29,6 @@ app.get("/", (req, res) => {
   res.send("API is Working!");
 });
 
-// app.listen(PORT, () => {
-//   console.log(`Server is running on http://localhost:${PORT}`);
-// });
-export default app;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
