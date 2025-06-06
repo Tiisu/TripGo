@@ -6,7 +6,7 @@ import bookingRouter from "./routes/bookingRoute.js";
 import adminRouter from "./routes/adminRoutes.js";
 import tourRouter from "./routes/tourRoutes.js";
 import paymentRouter from "./routes/paymentRoutes.js";
-const cors = require('cors');
+import cors from "cors"; // <-- use import, not require
 
 const PORT = process.env.PORT || 4000;
 const app = express();
