@@ -12,7 +12,14 @@ const PORT = process.env.PORT || 4000;
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://trip-go-rose.vercel.app', // your deployed frontend
+    'http://localhost:5173'            // for local development
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}));
 
 // Serve static files for uploaded images
 app.use('/uploads', express.static('uploads'));
