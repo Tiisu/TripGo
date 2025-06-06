@@ -115,6 +115,7 @@ const App = () => {
             <AdminLayout />
           </AdminProtectedRoute>
         }>
+          <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="tours" element={<TourManagement />} />
           <Route path="bookings" element={<BookingManagement />} />
