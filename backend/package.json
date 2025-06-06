@@ -2,7 +2,9 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "create-admin": "node scripts/createAdmin.js",
+    "seed-tours": "node scripts/seedTours.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
